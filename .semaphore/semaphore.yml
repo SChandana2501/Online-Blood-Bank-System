@@ -1,0 +1,39 @@
+version: v1.0
+name: Docker
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+blocks:
+  - name: Build
+    task:
+      secrets:
+        - name: GCP
+      prologue:
+        commands:
+          - gcloud auth activate-service-account --key-file=.secrets/gcp.json
+          - gcloud auth configure-docker -q
+          - checkout
+      jobs:
+        - name: docker build
+          commands:
+            - cd backend
+            - 'docker build -t "gcr.io/bloodbank-370900/bloodbankbackend:${SEMAPHORE_GIT_SHA:0:7}" .'
+            - 'docker push "gcr.io/bloodbank-370900/bloodbankbackend:${SEMAPHORE_GIT_SHA:0:7}"'
+    dependencies: []
+  - name: frontend
+    task:
+      secrets:
+        - name: GCP
+      prologue:
+        commands:
+          - gcloud auth activate-service-account --key-file=.secrets/gcp.json
+          - gcloud auth configure-docker -q
+          - checkout
+      jobs:
+        - name: bloodbankui
+          commands:
+            - cd frontend
+            - 'docker build -t "gcr.io/bloodbank-370900/bloodbankfrontend:${SEMAPHORE_GIT_SHA:0:7}" .'
+            - 'docker push "gcr.io/bloodbank-370900/bloodbankfrontend:${SEMAPHORE_GIT_SHA:0:7}"'
+    dependencies: []

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+
+    <!-- website font  -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+    <title>Donations</title>
+</head>
+
+<body onload="getDonors()">
+
+    <!-- Navbar 1 Start -->
+
+    <!-- Navbar 1 End -->
+
+    <!-- Navbar 2 Start -->
+    <section id="Nav2">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <img src="imgs/logo.png" width="18%"></img>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link selected" href="index.html">Request</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="donate.html">Donate</a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </section>
+    <!-- Navbar 2 End -->
+
+    <!-- Navigator Start -->
+
+    <!-- Navigator End -->
+
+    <!-- Requests Start -->
+    <section id="requests">
+        <div class="title">
+            <h2>Donors</h2>
+            <hr class="line">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <select name="Type" id="type">
+                        <option value="" disabled selected>Select Blood Type</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O+">O-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                    </select>
+                </div>
+                <div class="col-lg-5">
+                    <input type="text" name="city" id="city" style="margin-top:12% ;" placeholder="enter city">
+                </div>
+                <div class="col-lg-5">
+                    <input type="text" name="state" id="state" style="margin-top:12%;margin-left: 22% ;"
+                        placeholder="enter state">
+                </div>
+                <div class="col-lg-5">
+                    <input type="text" name="zipcode" id="zipcode" style="margin-top:12% ;"
+                        placeholder="enter zip code">
+                </div>
+                <div class="search">
+                    <button onclick="searchDonor()" style="cursor:pointer ;"><i
+                            class="col-lg-2 fas fa-search"></i></button>
+                </div>
+            </div>
+            <div id="donors-list">
+
+            </div>
+
+        </div>
+    </section>
+    <!-- Requests End -->
+
+    <!-- Footer Start -->
+    <section id="footer">
+        <div class="container">
+            <div class="col-md-5" style="float: right ;">
+                <div class="foot-info">
+                    <img src="imgs/logo.png" alt="">
+
+                </div>
+            </div>
+            <div class="row">
+
+
+
+            </div>
+        </div>
+    </section>
+    <script>
+        var donors = []
+        function getDonors() {
+            fetch("https://bloodbankbackend610-vtuhsgrhqa-uc.a.run.app/donor").then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                var nHTML = '';
+
+                donors = data.donors
+                if (donors != null) {
+                    donors.forEach(function (item) {
+                        nHTML += ' <div class="row"><div class="col-lg-12"><div class="row"><div class="col-lg-3"><div class="type"><h2>' + item.bloodGroup + '</h2></div></div><div class="data col-lg-6"><h4>Name: ' + item.firstName + ' ' + item.lastName + '</h4><h4>Age: ' + item.age + '</h4><h4>City: ' + item.city + '</h4></div><div class="col-lg-3"><a href="tel:' + item.phone + '" class="btn btn-primary" style="color:white;width:150px;margin-top:25%">call</a></br><a href="mailto:' + item.email + '" class="btn btn-secondary" style="color:white;width:150px;margin-top:5%">email</a></div></div></div></div>'
+
+                    });
+                    document.getElementById("donors-list").innerHTML = nHTML
+                } else {
+                    document.getElementById("donors-list").innerHTML = ""
+                }
+            }).catch(function () {
+                console.log("error");
+            });
+        }
+        function searchDonor() {
+            var bg = document.getElementById("type").value
+            var city = document.getElementById("city").value
+            var state = document.getElementById("state").value
+            var zipCode = document.getElementById("zipcode").value
+            bg = bg.replace("+", "%2B")
+            bg = bg.replace("-", "%2D")
+            url = "https://bloodbankbackend610-vtuhsgrhqa-uc.a.run.app/donor?bg=" + bg + "&city=" + city + "&state=" + state + "&zipCode=" + zipCode
+            console.log(url)
+            fetch(url).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                console.log(data)
+                var nHTML = '';
+
+                donors = data.donors
+                if (donors != null) {
+
+
+                    donors.forEach(function (item) {
+                        nHTML += ' <div class="row"><div class="col-lg-12"><div class="row"><div class="col-lg-3"><div class="type"><h2>' + item.bloodGroup + '</h2></div></div><div class="data col-lg-6"><h4>Name: ' + item.firstName + ' ' + item.lastName + '</h4><h4>Age: ' + item.age + '</h4><h4>City: ' + item.city + '</h4></div><div class="col-lg-3"><a href="tel:' + item.phone + '" class="btn btn-primary" style="color:white;width:150px;margin-top:25%">call</a></br><a href="mailto:' + item.email + '" class="btn btn-secondary" style="color:white;width:150px;margin-top:5%">email</a></div></div></div></div>'
+
+                    });
+                    document.getElementById("donors-list").innerHTML = nHTML
+                } else {
+                    document.getElementById("donors-list").innerHTML = ""
+                }
+            }).catch(function () {
+                console.log("error");
+            });
+        }
+    </script>
+    <!-- Footer End -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script type="text/javascript" src="js/swiper.min.js"></script>
+    <script type="text/javascript" src="js/wow.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+
+</html>

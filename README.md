@@ -7,4 +7,4 @@ The system allows donors to submit details online, which are stored centrally, a
 The user-friendly interface facilitates easy donor registration and blood requests, reducing paperwork and enhancing communication.
 The deployment on Google Cloud ensures broad accessibility, and the primary aim is to provide swift access to required blood groups, ultimately saving lives.
 
-Live Demo Link - 
+Live Demo Link - https://github.com/SChandana2501/Online-Blood-Bank-System/assets/150395569/0f2d67d4-6409-4545-8ae7-2306d332b9c6
